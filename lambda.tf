@@ -13,13 +13,13 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "${path.module}/index.py"
-  output_path = "${path.module}/index.zip"
+  source_file = "${path.module}/lambda/index.py"
+  output_path = "${path.module}/lambda/index.zip"
 }
 
 resource "aws_s3_bucket_object" "object" {
   bucket     = "${local.bucket_name}"
-  key        = "v${var.app_name}/${var.app_version}_index.zip"
+  key        = "v${var.bot_name}/${var.app_version}_index.zip"
   source     = "${data.archive_file.lambda.output_path}"
   etag       = "${md5(file(data.archive_file.lambda.output_path))}"
   depends_on = ["data.archive_file.lambda"]
