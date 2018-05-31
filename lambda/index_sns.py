@@ -4,14 +4,25 @@ import json
 # We use urllib2 instead of requests just to make the demo easier
 # In a production environment, consider using the requests library
 from urllib2 import Request, urlopen, URLError, HTTPError
+from bot_functions import get_param_map put_param_map
 
-LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
-FEEDBACK_CHANNEL = os.environ.get('feedback_channel')
-FEEDBACK_SLACK_NAME = os.environ.get('feedback_slack_name')
-FEEDBACK_SLACK_EMOJI = os.environ.get('feedback_slack_emoji')
-FEEDBACK_SLACK_URL = os.environ.get('feedback_slack_url')
+PARAM_ROOT = os.environ.get('PARAM_ROOT')
+
+kp = get_param_map(PARAM_ROOT)
+
+try:
+	FEEDBACK_CHANNEL_PATH = kp['channel']
+	FEEDBACK_SLACK_NAME_PATH = kp['slack_name']
+	FEEDBACK_SLACK_EMOJI_PATH = kp['slack_emoji']
+	FEEDBACK_SLACK_URL_PATH = kp['slack_url']
+except:
+	print('No Slack Details are available.')
+	return 'No Slack Details are available.'
+
 
 def lambda_handler(event, context):
     ''' Receive SNS and send to Slack '''
