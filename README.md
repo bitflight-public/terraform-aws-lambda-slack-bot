@@ -6,7 +6,7 @@ A Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, an
 
 This module creates the necessary AWS infrastructure to run a Slack bot that:
 - Receives events from Slack via an API Gateway endpoint
-- Processes events using an AWS Lambda function (Python 3.6 - *Note: Consider upgrading to a newer Python runtime*)
+- Processes events using an AWS Lambda function (Python 3.6 runtime - deprecated, see Requirements section)
 - Stores Slack tokens securely in AWS Systems Manager Parameter Store
 - Reverses text messages sent to the bot and posts them back to the Slack channel
 
@@ -163,6 +163,7 @@ You can test the Lambda function locally using the provided `test-event.json` fi
 
 ```bash
 # Test locally (requires AWS credentials configured)
+# Note: The function name is "handleBotEvent" as defined in lambda.tf
 aws lambda invoke \
   --function-name handleBotEvent \
   --payload file://test-event.json \
