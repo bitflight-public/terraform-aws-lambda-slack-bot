@@ -8,3 +8,5 @@
 dev.auto.tfvars
 terraform.tfvars
 *.zip
+__pycache__
+*.pyc
