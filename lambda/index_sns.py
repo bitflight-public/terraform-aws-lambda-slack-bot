@@ -1,10 +1,11 @@
 import os
 import logging
 import json
-# We use urllib2 instead of requests just to make the demo easier
+# We use urllib.request instead of requests just to make the demo easier
 # In a production environment, consider using the requests library
-from urllib2 import Request, urlopen, URLError, HTTPError
-from bot_functions import get_param_map put_param_map
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+from bot_functions import get_param_map, put_param_map
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
@@ -12,35 +13,42 @@ logger.setLevel(logging.DEBUG)
 
 PARAM_ROOT = os.environ.get('PARAM_ROOT')
 
-kp = get_param_map(PARAM_ROOT)
+kp = get_param_map(PARAM_ROOT) if PARAM_ROOT else {}
 
-try:
-	FEEDBACK_CHANNEL_PATH = kp['channel']
-	FEEDBACK_SLACK_NAME_PATH = kp['slack_name']
-	FEEDBACK_SLACK_EMOJI_PATH = kp['slack_emoji']
-	FEEDBACK_SLACK_URL_PATH = kp['slack_url']
-except:
-	print('No Slack Details are available.')
-	return 'No Slack Details are available.'
+# Initialize variables
+FEEDBACK_CHANNEL = None
+FEEDBACK_SLACK_NAME = None
+FEEDBACK_SLACK_EMOJI = None
+FEEDBACK_SLACK_URL = None
+
+if kp:
+    FEEDBACK_CHANNEL = kp.get('channel')
+    FEEDBACK_SLACK_NAME = kp.get('slack_name')
+    FEEDBACK_SLACK_EMOJI = kp.get('slack_emoji')
+    FEEDBACK_SLACK_URL = kp.get('slack_url')
 
 
 def lambda_handler(event, context):
     ''' Receive SNS and send to Slack '''
 
     if context:
-        LOGGER.debug('Function ARN: %s', context.invoked_function_arn)
+        logger.debug('Function ARN: %s', context.invoked_function_arn)
     else:
-        LOGGER.warning('Lambda context is missing')
+        logger.warning('Lambda context is missing')
+
+    if not all([FEEDBACK_CHANNEL, FEEDBACK_SLACK_NAME, FEEDBACK_SLACK_EMOJI, FEEDBACK_SLACK_URL]):
+        logger.error('No Slack Details are available.')
+        return 'No Slack Details are available.'
 
     for record in event['Records']:
         if 'Sns' not in record:
-            LOGGER.warn('ERROR ABANDON RECORD:  Not an SNS event')
+            logger.warning('ERROR ABANDON RECORD:  Not an SNS event')
             continue
 
         subject = record['Sns']['Subject']
 
         if subject != 'feedback':
-            LOGGER.warn('Non-feedback message in feedback SNS')
+            logger.warning('Non-feedback message in feedback SNS')
             continue
 
         feedback = json.loads(record['Sns']['Message'])
@@ -55,12 +63,13 @@ def lambda_handler(event, context):
             'icon_emoji': FEEDBACK_SLACK_EMOJI
         }
         slack_url = FEEDBACK_SLACK_URL
-        req = Request(slack_url, json.dumps(slack_message))
+        req = Request(slack_url, json.dumps(slack_message).encode('utf-8'))
+        req.add_header('Content-Type', 'application/json')
         try:
             response = urlopen(req)
             response.read()
-            LOGGER.info('Message posted')
+            logger.info('Message posted')
         except HTTPError as exc:
-            LOGGER.error('Request failed: %d %s', exc.code, exc.reason)
+            logger.error('Request failed: %d %s', exc.code, exc.reason)
         except URLError as exc:
-            LOGGER.error('Server connection failed: %s', exc.reason)
+            logger.error('Server connection failed: %s', exc.reason)
