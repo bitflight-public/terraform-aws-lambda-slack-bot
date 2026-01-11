@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ClientError, BotoCoreError
 
 def get_param_map(param_root):
     client = boto3.client('ssm')
@@ -37,6 +38,6 @@ def put_param_map(param_root, kp_map):
                 Overwrite=True
             )
         return 0
-    except:
-        print ('Error writing map to SSM parameter store' + kp_map)
+    except (ClientError, BotoCoreError) as e:
+        print(f'Error writing map to SSM parameter store: {kp_map}, error: {str(e)}')
         return 1

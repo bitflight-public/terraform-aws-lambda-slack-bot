@@ -5,6 +5,7 @@ import json
 # In a production environment, consider using the requests library
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from botocore.exceptions import ClientError, BotoCoreError
 from bot_functions import get_param_map, put_param_map
 
 logger = logging.getLogger(__name__)
@@ -13,19 +14,22 @@ logger.setLevel(logging.DEBUG)
 
 PARAM_ROOT = os.environ.get('PARAM_ROOT')
 
-kp = get_param_map(PARAM_ROOT) if PARAM_ROOT else {}
-
 # Initialize variables
 FEEDBACK_CHANNEL = None
 FEEDBACK_SLACK_NAME = None
 FEEDBACK_SLACK_EMOJI = None
 FEEDBACK_SLACK_URL = None
 
-if kp:
-    FEEDBACK_CHANNEL = kp.get('channel')
-    FEEDBACK_SLACK_NAME = kp.get('slack_name')
-    FEEDBACK_SLACK_EMOJI = kp.get('slack_emoji')
-    FEEDBACK_SLACK_URL = kp.get('slack_url')
+if PARAM_ROOT:
+    try:
+        kp = get_param_map(PARAM_ROOT)
+        if kp:
+            FEEDBACK_CHANNEL = kp.get('channel')
+            FEEDBACK_SLACK_NAME = kp.get('slack_name')
+            FEEDBACK_SLACK_EMOJI = kp.get('slack_emoji')
+            FEEDBACK_SLACK_URL = kp.get('slack_url')
+    except (ClientError, BotoCoreError) as e:
+        logger.error(f'Error retrieving SSM parameters: {str(e)}')
 
 
 def lambda_handler(event, context):
