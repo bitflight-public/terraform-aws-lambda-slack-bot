@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(git:*)",
+      "Bash(terraform:*)",
+      "Bash(python:*)",
+      "Bash(pip:*)",
+      "Bash(pytest:*)",
+      "Bash(mypy:*)",
+      "Bash(pylint:*)",
+      "Bash(bandit:*)",
+      "Bash(docker:*)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Task",
+      "Skill"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🚀 Brownfield Modernization Environment Ready' && if [ -f MODERNIZATION_CHECKPOINT.md ]; then echo '📋 Existing checkpoint found - use /modernize --resume to continue'; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/skills/modernize/scripts/git-checkpoint-save.sh 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
