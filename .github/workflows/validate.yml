@@ -119,6 +119,17 @@ jobs:
       - name: Initialize TFLint
         run: tflint --init
 
+      - name: Install terraform-docs
+        run: |
+          curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.19.0/terraform-docs-v0.19.0-linux-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz
+          chmod +x terraform-docs
+          sudo mv terraform-docs /usr/local/bin/
+          rm terraform-docs.tar.gz
+
+      - name: Install Python dependencies
+        run: uv sync --frozen
+
       - name: Install prek
         run: uv tool install prek
 
