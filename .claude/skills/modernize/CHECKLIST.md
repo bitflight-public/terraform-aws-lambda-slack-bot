@@ -24,6 +24,7 @@
 **Best Practice:** Use AST parsing to catalog all code entities, then verify completeness through cross-referencing.
 
 **Checklist:**
+
 - [ ] Parse repository with language-appropriate AST tools
 - [ ] Generate inventory of functions, classes, modules
 - [ ] Verify file counts match directory traversal
@@ -32,6 +33,7 @@
 - [ ] Document any files requiring manual review
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Analysis): Parse repository with tree-sitter/AST tools
 - Generate inventory: 247 functions, 89 classes, 34 modules
@@ -55,6 +57,7 @@ Step 4 (Corrected Output):
 **Best Practice:** Build dependency graph, then validate against actual runtime behavior.
 
 **Checklist:**
+
 - [ ] Create static dependency map from import analysis
 - [ ] Identify circular dependencies
 - [ ] Flag runtime dependencies (reflection, dynamic loading)
@@ -62,6 +65,7 @@ Step 4 (Corrected Output):
 - [ ] Document dependency relationships in graph format
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Initial Graph): Create dependency map using import analysis
 Module A → Module B → Module C
@@ -82,6 +86,7 @@ Step 3 (Self-Correction):
 **Best Practice:** Run security scans, verify findings against false-positive patterns.
 
 **Checklist:**
+
 - [ ] Run static security analysis (bandit, CodeQL, semgrep)
 - [ ] Categorize findings by severity
 - [ ] Verify each critical/high finding manually
@@ -90,6 +95,7 @@ Step 3 (Self-Correction):
 - [ ] Create remediation priority list
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Scan): bandit -r src/ -f json
 - Result: 23 potential security issues detected
@@ -109,6 +115,7 @@ Step 3 (Validated Output):
 **Best Practice:** Validate infrastructure code against cloud provider state.
 
 **Checklist:**
+
 - [ ] Run `terraform validate` to check syntax
 - [ ] Run `terraform plan` to detect drift
 - [ ] Review IAM policies for least-privilege violations
@@ -117,6 +124,7 @@ Step 3 (Validated Output):
 - [ ] Document infrastructure dependencies
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Analysis): terraform validate && terraform plan
 - Parse all .tf files for resource definitions
@@ -140,6 +148,7 @@ Step 3 (Findings):
 **Best Practice:** Implement strict type checking, use failures as ground truth for AI corrections.
 
 **Checklist:**
+
 - [ ] Install type checker (mypy, pyright for Python; tsc for TypeScript)
 - [ ] Configure strict mode settings
 - [ ] Add type stubs for untyped dependencies
@@ -147,6 +156,7 @@ Step 3 (Findings):
 - [ ] Document type errors requiring manual resolution
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Setup): Add mypy with strict configuration
 [mypy]
@@ -172,6 +182,7 @@ Step 4 (Verify): mypy passes → Accept change
 **Best Practice:** Configure linters as automatic hallucination detectors.
 
 **Checklist:**
+
 - [ ] Install language-appropriate linters (pylint, eslint, tflint)
 - [ ] Configure project-specific rules
 - [ ] Enable all warnings initially, then tune
@@ -179,6 +190,7 @@ Step 4 (Verify): mypy passes → Accept change
 - [ ] Document intentional rule suppressions
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Configure): .pylintrc with project-specific rules
 [MESSAGES CONTROL]
@@ -209,6 +221,7 @@ def calculate_total(items):
 **Best Practice:** Existing tests must pass; new code requires tests before acceptance.
 
 **Checklist:**
+
 - [ ] Verify test framework is installed and configured
 - [ ] Run existing test suite, document failures
 - [ ] Measure baseline code coverage
@@ -217,6 +230,7 @@ def calculate_total(items):
 - [ ] Document untestable code requiring refactoring
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Baseline): Run existing test suite
 pytest tests/ --cov=src
@@ -246,6 +260,7 @@ Step 5 (New Test Requirement):
 **Best Practice:** Use terraform validate and plan as infrastructure validation gates.
 
 **Checklist:**
+
 - [ ] Set up terraform init with backend configuration
 - [ ] Configure terraform validate in CI
 - [ ] Run terraform plan with -detailed-exitcode
@@ -253,6 +268,7 @@ Step 5 (New Test Requirement):
 - [ ] Configure checkov/tfsec for security scanning
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Validate): terraform validate
 → Success! The configuration is valid.
@@ -278,6 +294,7 @@ Step 4 (Self-Correction):
 **Best Practice:** Generate architecture diagrams, validate against actual runtime behavior.
 
 **Checklist:**
+
 - [ ] Analyze imports and class relationships
 - [ ] Generate component diagram
 - [ ] Identify architectural layers
@@ -286,6 +303,7 @@ Step 4 (Self-Correction):
 - [ ] Create architecture decision records (ADRs)
 
 **Example Verification Loop:**
+
 ```
 Step 1 (Static Analysis): AI analyzes imports and class relationships
 Generated architecture:
@@ -312,6 +330,7 @@ Step 4 (Corrected Architecture):
 **Best Practice:** Document each component's purpose, validate against actual usage.
 
 **Checklist:**
+
 - [ ] Document purpose of each module/package
 - [ ] Identify component responsibilities
 - [ ] Verify documentation against grep/usage analysis
@@ -319,6 +338,7 @@ Step 4 (Corrected Architecture):
 - [ ] Identify coupling and cohesion issues
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Documentation):
 "UserService: Handles user authentication and profile management"
@@ -343,6 +363,7 @@ Step 4 (Cross-Reference):
 **Best Practice:** Map data flows, validate against actual data paths.
 
 **Checklist:**
+
 - [ ] Identify data entry points (APIs, events, files)
 - [ ] Trace data transformation steps
 - [ ] Document data storage locations
@@ -358,6 +379,7 @@ Step 4 (Cross-Reference):
 **Best Practice:** Generate task list, validate dependencies through build simulation.
 
 **Checklist:**
+
 - [ ] Break down modernization into discrete tasks
 - [ ] Identify task dependencies
 - [ ] Validate dependency order through simulation
@@ -365,6 +387,7 @@ Step 4 (Cross-Reference):
 - [ ] Define acceptance criteria with automated tests
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Task Generation):
 Task 1: Upgrade Python 3.6 → 3.11
@@ -394,6 +417,7 @@ Step 4 (Validation):
 **Best Practice:** Identify high-risk changes, validate risk level against history.
 
 **Checklist:**
+
 - [ ] Categorize tasks by risk level
 - [ ] Review git history for similar past changes
 - [ ] Assess test coverage for affected areas
@@ -401,6 +425,7 @@ Step 4 (Validation):
 - [ ] Plan mitigation strategies
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Risk Assessment):
 "Refactoring authentication system: Medium Risk"
@@ -428,6 +453,7 @@ Step 4 (Corrected Risk Assessment):
 **Best Practice:** Plan incremental changes, validate each increment independently.
 
 **Checklist:**
+
 - [ ] Define migration increments
 - [ ] Ensure each increment is deployable
 - [ ] Create feature flags for gradual rollout
@@ -443,6 +469,7 @@ Step 4 (Corrected Risk Assessment):
 **Best Practice:** Design pipeline stages, validate by simulating failure scenarios.
 
 **Checklist:**
+
 - [ ] Define pipeline stages (lint, test, security, build, deploy)
 - [ ] Configure blocking vs. non-blocking stages
 - [ ] Simulate failure scenarios for each stage
@@ -450,6 +477,7 @@ Step 4 (Corrected Risk Assessment):
 - [ ] Set up notifications for failures
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Pipeline Design):
 stages:
@@ -488,6 +516,7 @@ validation:
 **Best Practice:** Create Docker images, validate build reproducibility and caching.
 
 **Checklist:**
+
 - [ ] Create multi-stage Dockerfile
 - [ ] Verify build reproducibility (same hash)
 - [ ] Optimize layer caching
@@ -495,6 +524,7 @@ validation:
 - [ ] Scan for vulnerabilities
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Dockerfile):
 FROM python:3.11
@@ -527,6 +557,7 @@ Step 4 (Validation):
 **Best Practice:** Create comprehensive CI workflow with all validation gates.
 
 **Checklist:**
+
 - [ ] Configure workflow triggers (push, PR, schedule)
 - [ ] Set up job dependencies
 - [ ] Configure caching for dependencies
@@ -542,6 +573,7 @@ Step 4 (Validation):
 **Best Practice:** AI-generated code must pass multi-stage verification before human review.
 
 **Checklist:**
+
 - [ ] Run linting on all generated code
 - [ ] Run type checking on all generated code
 - [ ] Run security scan on all generated code
@@ -549,6 +581,7 @@ Step 4 (Validation):
 - [ ] Verify all claims in comments/docstrings
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Generates Code):
 def fetch_user_data(user_id: int) -> Dict:
@@ -575,6 +608,7 @@ All gates pass → Ready for human review
 **Best Practice:** Cross-reference documentation claims against actual code.
 
 **Checklist:**
+
 - [ ] Verify file/function references exist
 - [ ] Verify version numbers match reality
 - [ ] Verify configuration values match code
@@ -582,6 +616,7 @@ All gates pass → Ready for human review
 - [ ] Test code examples for correctness
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Documentation):
 "The caching layer uses Redis with a 1-hour TTL for all queries."
@@ -608,6 +643,7 @@ Step 4 (Validation):
 **Best Practice:** Apply systematic checks for common AI hallucination patterns.
 
 **Checklist:**
+
 - [ ] Verify all file paths exist
 - [ ] Verify all function/class names exist
 - [ ] Verify all version numbers are accurate
@@ -616,6 +652,7 @@ Step 4 (Validation):
 - [ ] Verify all dependency claims against lock files
 
 **Verification Commands:**
+
 ```bash
 # Dependency claims
 grep "package_name" requirements.txt package.json
@@ -647,6 +684,7 @@ pytest --cov=src --cov-report=term
 **Best Practice:** Generate contextual README for each directory, validate against contents.
 
 **Checklist:**
+
 - [ ] List all files in directory
 - [ ] Document purpose of each file
 - [ ] Verify file descriptions against code
@@ -654,6 +692,7 @@ pytest --cov=src --cov-report=term
 - [ ] Cross-reference with related directories
 
 **Example Verification Loop:**
+
 ```
 Step 1 (AI Generates): src/services/README.md
 "# Services Layer
@@ -680,6 +719,7 @@ Step 4 (Validation):
 **Best Practice:** Generate API docs, validate with actual API calls.
 
 **Checklist:**
+
 - [ ] Document all endpoints/functions
 - [ ] Include request/response examples
 - [ ] Test all examples for correctness
@@ -691,6 +731,7 @@ Step 4 (Validation):
 **Best Practice:** Document architectural decisions with context and validation.
 
 **Checklist:**
+
 - [ ] Document decision context
 - [ ] List options considered
 - [ ] Explain chosen approach
@@ -706,6 +747,7 @@ Step 4 (Validation):
 **Best Practice:** Implement automated validation before any code is committed.
 
 **Configuration (.pre-commit-config.yaml):**
+
 ```yaml
 repos:
   - repo: local
@@ -746,6 +788,7 @@ repos:
 **Best Practice:** Automatically detect when code changes make documentation inaccurate.
 
 **Checklist:**
+
 - [ ] Monitor function signature changes
 - [ ] Track configuration value changes
 - [ ] Alert on undocumented public API changes
@@ -757,6 +800,7 @@ repos:
 **Best Practice:** Track modernization progress with metrics.
 
 **Metrics to Track:**
+
 - [ ] Test coverage percentage
 - [ ] Lint error count
 - [ ] Type coverage percentage

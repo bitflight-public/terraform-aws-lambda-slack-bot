@@ -25,7 +25,7 @@ if [ -f "$CHECKPOINT_FILE" ] && [ "$1" != "--force" ]; then
     echo ""
 
     # Show current status
-    if command -v grep &> /dev/null; then
+    if command -v grep &>/dev/null; then
         echo "Current Status:"
         grep -E "^\| \*\*Total\*\*" "$CHECKPOINT_FILE" 2>/dev/null || echo "  (unable to read status)"
     fi

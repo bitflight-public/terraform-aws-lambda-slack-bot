@@ -90,12 +90,15 @@ knowledge/
 # Linting Investigation Report - [Date]
 
 ## Issues Analyzed
+
 [List of linting errors with file:line references]
 
 ## Investigation Process
+
 [Step-by-step investigation using linter-specific workflow]
 
 ## Root Causes Identified
+
 [Detailed analysis following holistic-linting skill methodology]
 ```
 
@@ -105,6 +108,7 @@ knowledge/
 ### Linting Resolution: [Rule Code] - [Brief Description]
 
 **Investigation Summary:**
+
 - Original assumption: [Initial hypothesis]
 - Actual finding: [Verified root cause]
 - Pattern discovered: [Codebase convention uncovered]
@@ -113,11 +117,13 @@ knowledge/
 [Key insights about system design relationships]
 
 **Review Focus Areas:**
+
 1. [Aspect needing architectural review]
 2. [Potential broader impact]
 3. [Consistency concerns]
 
 **Follow-up Tasks:**
+
 - [ ] [Action items for similar code]
 ```
 

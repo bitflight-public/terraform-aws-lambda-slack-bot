@@ -413,7 +413,6 @@ This section provides systematic resolution procedures for each major Python lin
    ```
 
    This command provides:
-
    - What the rule prevents (design principle)
    - When code violates the rule
    - Example of violating code
@@ -423,7 +422,6 @@ This section provides systematic resolution procedures for each major Python lin
 2. **Read Rule Documentation Output**
 
    The ruff rule output contains critical information:
-
    - **Principle**: Why this pattern is problematic
    - **Bad Pattern**: What code triggers the rule
    - **Good Pattern**: How to fix it correctly
@@ -439,7 +437,6 @@ This section provides systematic resolution procedures for each major Python lin
    ```
 
    Focus on:
-
    - The line with the error
    - Surrounding context (5-10 lines before/after)
    - Related function/class definitions
@@ -447,7 +444,6 @@ This section provides systematic resolution procedures for each major Python lin
 4. **Check Architectural Context**
 
    Examine how this code fits into the broader system:
-
    - What does this function/module do?
    - How is it called by other code?
    - Are there similar patterns elsewhere in the codebase?
@@ -471,7 +467,6 @@ This section provides systematic resolution procedures for each major Python lin
 6. **Implement Elegant Fix**
 
    Apply the fix following these principles:
-
    - Address the root cause, not the symptom
    - Follow modern Python patterns from python3-development skill
    - Maintain or improve code readability
@@ -538,7 +533,6 @@ Issue: ruff reports "F401: 'os' imported but unused" in utils.py
 2. **Read Error Code Documentation**
 
    The mypy documentation explains:
-
    - What type safety principle is violated
    - When this is an error (type violations)
    - When this is NOT an error (valid patterns)
@@ -558,19 +552,16 @@ Issue: ruff reports "F401: 'os' imported but unused" in utils.py
    ```
 
    b. **Identify the type mismatch**:
-
    - What type does mypy think the variable is?
    - What type does mypy expect?
    - Where does the variable get its type?
 
    c. **Trace upstream**:
-
    - Read function signatures
    - Check return type annotations
    - Review variable assignments
 
    d. **Check library type stubs**:
-
    - If the error involves a library, check its type stubs
    - Use `python -c "import library; print(library.__file__)"` to locate
    - Read `.pyi` stub files or `py.typed` marker
@@ -578,7 +569,6 @@ Issue: ruff reports "F401: 'os' imported but unused" in utils.py
 4. **Check Architectural Context**
 
    Understand the design intent:
-
    - What is this function supposed to do?
    - What types should it accept and return?
    - Is the current type annotation accurate?
@@ -740,7 +730,6 @@ Issue: mypy reports "Incompatible return value type (got dict[str, Any], expecte
 2. **Read Diagnostic Rule Documentation**
 
    The basedpyright documentation explains:
-
    - What type safety issue the rule detects
    - Configuration levels (basic, standard, strict, all)
    - Whether the rule can be disabled per-project
@@ -755,7 +744,6 @@ Issue: mypy reports "Incompatible return value type (got dict[str, Any], expecte
    ```
 
    Focus on:
-
    - The exact line with the error
    - Type annotations in the surrounding function/class
    - Import statements for typing constructs
@@ -791,7 +779,6 @@ Issue: mypy reports "Incompatible return value type (got dict[str, Any], expecte
 5. **Check Architectural Context**
 
    Determine if the error reveals a real issue:
-
    - Is the type annotation incomplete or wrong?
    - Is there missing type narrowing?
    - Is the code relying on runtime behavior not captured in types?
@@ -931,20 +918,17 @@ Issue: pyright reports "reportOptionalMemberAccess: 'upper' is not a known membe
 All linter resolution workflows integrate with the python3-development skill at the implementation stage. This integration ensures:
 
 1. **Modern Python Patterns**: Fixes use Python 3.11+ syntax
-
    - Native generics (`list[str]` not `List[str]`)
    - Union syntax (`str | None` not `Optional[str]`)
    - Structural pattern matching where appropriate
 
 2. **Idiomatic Code**: Solutions follow Python best practices
-
    - Clear naming conventions
    - Appropriate use of comprehensions
    - Proper exception handling
    - Single Responsibility Principle
 
 3. **Type Safety**: Type annotations are complete and accurate
-
    - Precise return types
    - Correct parameter types
    - Proper use of generics and protocols

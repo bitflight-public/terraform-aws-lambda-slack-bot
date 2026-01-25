@@ -6,11 +6,12 @@ This repository includes a comprehensive AI-assisted brownfield modernization sk
 
 ### Start a New Modernization Project
 
-```
+```bash
 /modernize --init
 ```
 
 This will:
+
 1. Create a checkpoint document (`MODERNIZATION_CHECKPOINT.md`)
 2. Establish baseline metrics
 3. Launch specialist agents to analyze the codebase
@@ -18,7 +19,7 @@ This will:
 
 ### Resume Previous Progress
 
-```
+```bash
 /modernize --resume
 ```
 
@@ -26,7 +27,7 @@ If your session was interrupted, this will load the last checkpoint and continue
 
 ### Check Status
 
-```
+```bash
 /modernize --status
 ```
 
@@ -38,18 +39,18 @@ View current progress and next steps.
 
 The `/modernize` skill coordinates four specialist agents that can run concurrently:
 
-| Agent | Purpose | Focus Areas |
-|-------|---------|-------------|
-| `architecture-reviewer` | Analyze code structure | Module organization, dependencies, design patterns |
-| `security-auditor` | Review security posture | Secrets, IAM, vulnerabilities, compliance |
-| `testing-specialist` | Assess test coverage | Test quality, gaps, infrastructure |
-| `dependency-manager` | Evaluate dependencies | Versions, vulnerabilities, upgrades |
+| Agent                   | Purpose                 | Focus Areas                                        |
+| ----------------------- | ----------------------- | -------------------------------------------------- |
+| `architecture-reviewer` | Analyze code structure  | Module organization, dependencies, design patterns |
+| `security-auditor`      | Review security posture | Secrets, IAM, vulnerabilities, compliance          |
+| `testing-specialist`    | Assess test coverage    | Test quality, gaps, infrastructure                 |
+| `dependency-manager`    | Evaluate dependencies   | Versions, vulnerabilities, upgrades                |
 
 ### Validation Harness
 
 Every AI-generated finding passes through a validation harness:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    VALIDATION HARNESS                        │
 ├─────────────────────────────────────────────────────────────┤
@@ -75,6 +76,7 @@ The skill implements Chain-of-Verification (CoVe):
 ### Checkpoint Persistence
 
 Progress is automatically saved to `MODERNIZATION_CHECKPOINT.md`:
+
 - Task status (pending, in_progress, completed, blocked)
 - Agent findings and timestamps
 - Self-correction log
@@ -84,7 +86,7 @@ If a session is interrupted, you can resume from the last checkpoint.
 
 ## File Structure
 
-```
+```text
 .claude/
 ├── settings.json                    # Hooks and permissions
 ├── skills/
@@ -120,7 +122,7 @@ See [CHECKLIST.md](../.claude/skills/modernize/CHECKLIST.md) for the complete ch
 
 ## Example Session
 
-```
+```text
 User: /modernize --init
 
 Claude: 🚀 Initializing Brownfield Modernization Workflow
@@ -197,15 +199,19 @@ Create a new agent definition in `.claude/agents/`:
 # My Custom Agent
 
 ## Description
+
 [What this agent does]
 
 ## Instructions
+
 [Detailed instructions for the agent]
 
 ### Analysis Process
+
 [Step-by-step process]
 
 ### Output Format
+
 [Expected output structure]
 ```
 

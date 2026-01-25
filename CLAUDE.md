@@ -62,11 +62,14 @@ aws lambda invoke --function-name handleBotEvent --payload file://test-event.jso
 This repository uses automated linting for both Python and Terraform/HCL files:
 
 **Terraform/HCL:**
+
 - `terraform fmt` - Canonical formatting for all `.tf` files
 - `tflint` - Terraform linter with AWS plugin (configured in `.tflint.hcl`)
 - `terraform validate` - Configuration syntax validation
+- `terraform-docs` - Auto-generates documentation (configured in `.terraform-docs.yml`)
 
 **Python (managed by uv):**
+
 - `ruff` - Fast Python linter and formatter
 - `mypy` - Static type checker (strict mode)
 - `basedpyright` - Additional type checking
@@ -78,7 +81,7 @@ Install with `uv tool install prek && prek install`. Hooks run automatically on 
 
 ## Architecture
 
-```
+```text
 Slack Event API → API Gateway (POST /event-handler) → Lambda (Python 3.12) → Slack API
                                                             ↓
                                                     SSM Parameter Store
@@ -86,6 +89,7 @@ Slack Event API → API Gateway (POST /event-handler) → Lambda (Python 3.12) �
 ```
 
 **Key Resources:**
+
 - `lambda.tf` - Lambda function definition, handler: `index.lambda_handler`
 - `api_gateway.tf` - REST API with `/event-handler` POST endpoint
 - `iam.tf` - IAM roles for Lambda with SSM access
@@ -96,6 +100,7 @@ Slack Event API → API Gateway (POST /event-handler) → Lambda (Python 3.12) �
 - `outputs.tf` - Module output definitions
 
 **Lambda Functions:**
+
 - `lambda/index.py` - Main Slack event handler (challenge verification, message processing)
 - `lambda/bot_functions.py` - SSM parameter helpers (`get_param_map`, `put_param_map`)
 - `lambda/index_sns.py` - Alternative SNS-triggered handler
@@ -103,6 +108,7 @@ Slack Event API → API Gateway (POST /event-handler) → Lambda (Python 3.12) �
 ## Modernization Workflow
 
 This repo includes a brownfield modernization framework in `.claude/`. Use:
+
 - `/modernize --init` - Initialize new modernization project
 - `/modernize --resume` - Resume from checkpoint
 - `/modernize --status` - View current progress
@@ -111,13 +117,13 @@ Specialist agents in `.claude/agents/`: architecture-reviewer, security-auditor,
 
 ## Variables
 
-| Variable | Type | Default | Required | Description |
-|----------|------|---------|----------|-------------|
-| `slack_token` | string | `""` | Yes | Slack Bot OAuth token (sensitive) |
-| `bot_name` | string | `"arnold"` | No | Name of the Slack bot |
-| `app_version` | string | `"0.4.4"` | No | Application version |
-| `bucket_name` | string | `""` | No | S3 bucket name (creates new if empty) |
-| `region` | string | `"eu-west-2"` | No | AWS region |
+| Variable      | Type   | Default       | Required | Description                           |
+| ------------- | ------ | ------------- | -------- | ------------------------------------- |
+| `slack_token` | string | `""`          | Yes      | Slack Bot OAuth token (sensitive)     |
+| `bot_name`    | string | `"arnold"`    | No       | Name of the Slack bot                 |
+| `app_version` | string | `"0.4.4"`     | No       | Application version                   |
+| `bucket_name` | string | `""`          | No       | S3 bucket name (creates new if empty) |
+| `region`      | string | `"eu-west-2"` | No       | AWS region                            |
 
 ## Output
 

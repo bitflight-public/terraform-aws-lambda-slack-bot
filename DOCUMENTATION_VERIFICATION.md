@@ -6,21 +6,24 @@ This report verifies our Terraform and Python implementation against current off
 
 ## 1. AWS Lambda Python 3.12 Runtime ✅
 
-### Official Documentation Verification
+### 1.1 Official Documentation Verification
+
 - **Source**: AWS Lambda Documentation, AWS Blogs (December 2023)
 - **Status**: Python 3.12 is fully supported on AWS Lambda
-- **Support Timeline**: 
+- **Support Timeline**:
   - Available since: December 2023
   - Standard support ends: October 31, 2028
   - Grace period until: January 10, 2029
 
-### Our Implementation
+### 1.2 Our Implementation
+
 ```python
 # lambda.tf
 runtime = "python3.12"
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Python 3.12 is the recommended modern runtime for 2026
 - Will be supported for 2+ more years
 - Based on Amazon Linux 2023 with performance improvements
@@ -29,11 +32,13 @@ runtime = "python3.12"
 
 ## 2. Terraform AWS Provider v6 - S3 Resources ✅
 
-### Official Documentation Verification
+### 2.1 Official Documentation Verification
+
 - **Source**: Terraform Registry, AWS Provider v6 Upgrade Guide
 - **Required Changes**: S3 bucket ACL and versioning MUST be separate resources in v6
 
-### Our Implementation
+### 2.2 Our Implementation
+
 ```hcl
 # main.tf
 resource "aws_s3_bucket" "b" {
@@ -52,7 +57,7 @@ resource "aws_s3_bucket_versioning" "b" {
   count      = var.bucket_name == "" ? 1 : 0
   bucket     = aws_s3_bucket.b[0].id
   depends_on = [aws_s3_bucket.b]
-  
+
   versioning_configuration {
     status = "Enabled"
   }
@@ -60,6 +65,7 @@ resource "aws_s3_bucket_versioning" "b" {
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Follows AWS Provider v6 migration pattern exactly
 - Separate resources for ACL and versioning (required in v6)
 - Explicit dependencies for proper ordering
@@ -69,11 +75,13 @@ resource "aws_s3_bucket_versioning" "b" {
 
 ## 3. Terraform AWS Provider v6 - aws_s3_object ✅
 
-### Official Documentation Verification
+### 3.1 Official Documentation Verification
+
 - **Source**: Terraform Registry (hashicorp/aws provider)
 - **Resource Name**: `aws_s3_object` (replaced deprecated `aws_s3_bucket_object`)
 
-### Our Implementation
+### 3.2 Our Implementation
+
 ```hcl
 # lambda.tf
 resource "aws_s3_object" "object" {
@@ -86,6 +94,7 @@ resource "aws_s3_object" "object" {
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Uses correct resource name for AWS Provider v6+
 - Proper bucket, key, source, and etag configuration
 - Matches official documentation examples
@@ -94,11 +103,13 @@ resource "aws_s3_object" "object" {
 
 ## 4. API Gateway Deployment & Stage Separation ✅
 
-### Official Documentation Verification
+### 4.1 Official Documentation Verification
+
 - **Source**: AWS re:Post, Terraform Registry, AWS Samples GitHub
 - **Best Practice**: Separate deployment and stage resources with triggers
 
-### Our Implementation
+### 4.2 Our Implementation
+
 ```hcl
 # api_gateway.tf
 resource "aws_api_gateway_deployment" "deployment" {
@@ -106,9 +117,9 @@ resource "aws_api_gateway_deployment" "deployment" {
     aws_api_gateway_integration.lambda,
     aws_api_gateway_integration_response.response
   ]
-  
+
   rest_api_id = aws_api_gateway_rest_api.bot.id
-  
+
   triggers = {
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.event_handler.id,
@@ -117,7 +128,7 @@ resource "aws_api_gateway_deployment" "deployment" {
       aws_api_gateway_integration_response.response.id,
     ]))
   }
-  
+
   lifecycle {
     create_before_destroy = true
   }
@@ -127,7 +138,7 @@ resource "aws_api_gateway_stage" "production" {
   deployment_id = aws_api_gateway_deployment.deployment.id
   rest_api_id   = aws_api_gateway_rest_api.bot.id
   stage_name    = "production"
-  
+
   variables = {
     "bot_name" = var.bot_name
     "version"  = var.app_version
@@ -136,6 +147,7 @@ resource "aws_api_gateway_stage" "production" {
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Separate deployment and stage resources (required best practice)
 - Triggers block forces redeployment on API changes
 - Explicit dependencies including integration_response
@@ -146,11 +158,13 @@ resource "aws_api_gateway_stage" "production" {
 
 ## 5. Slack Events API - Token Storage ✅
 
-### Official Documentation Verification
+### 5.1 Official Documentation Verification
+
 - **Source**: Slack Developer Documentation, Security Best Practices
 - **Best Practice**: Use signing secrets (not verification tokens), store in secure secret management
 
-### Our Implementation
+### 5.2 Our Implementation
+
 ```python
 # index.py
 BOT_TOKEN = os.environ["BOT_TOKEN"]
@@ -173,12 +187,14 @@ if response['Parameters'][0]['Value'] != data['token']:
 ```
 
 **Verification Result**: ✅ CORRECT with NOTES
+
 - Stores verification token in AWS SSM Parameter Store (secure secret management)
 - Token retrieved from environment variables (not hardcoded)
 - Challenge verification implemented correctly
 - Token validation before processing events
 
 **Note**: Slack now recommends using signing secrets instead of verification tokens. Consider upgrading to signature verification in future updates:
+
 ```python
 # Future enhancement
 import hmac
@@ -192,11 +208,13 @@ timestamp = request.headers['X-Slack-Request-Timestamp']
 
 ## 6. Python Exception Handling ✅
 
-### Official Documentation Verification
+### 6.1 Official Documentation Verification
+
 - **Source**: Python Best Practices, botocore Documentation
 - **Best Practice**: Catch specific exceptions, not bare except
 
-### Our Implementation
+### 6.2 Our Implementation
+
 ```python
 # bot_functions.py
 from botocore.exceptions import ClientError, BotoCoreError
@@ -211,6 +229,7 @@ except (ClientError, BotoCoreError) as e:
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Specific exception types from botocore
 - Proper error message formatting with f-strings
 - Follows Python best practices
@@ -220,20 +239,24 @@ except (ClientError, BotoCoreError) as e:
 
 ## 7. Terraform Version Requirements ✅
 
-### Official Documentation Verification
+### 7.1 Official Documentation Verification
+
 - **Source**: .terraform.lock.hcl, Terraform Registry
 
-### Our Implementation
+### 7.2 Our Implementation
+
 ```markdown
 # README.md
-| Name | Version |
-|------|---------|
-| terraform | >= 1.6 |
-| aws provider | >= 6.0 |
-| python | 3.12 |
+
+| Name         | Version |
+| ------------ | ------- |
+| terraform    | >= 1.6  |
+| aws provider | >= 6.0  |
+| python       | 3.12    |
 ```
 
 **Verification Result**: ✅ CORRECT
+
 - Terraform 1.6+ supports all syntax we use
 - AWS Provider 6.0+ (locked at 6.28.0) is correct for our resources
 - Python 3.12 matches Lambda runtime
@@ -242,15 +265,15 @@ except (ClientError, BotoCoreError) as e:
 
 ## Summary of Documentation Verification
 
-| Component | Status | Official Source |
-|-----------|--------|----------------|
-| Python 3.12 Runtime | ✅ VERIFIED | AWS Lambda Docs, AWS Blogs |
-| aws_s3_object Resource | ✅ VERIFIED | Terraform Registry |
-| S3 ACL/Versioning Separation | ✅ VERIFIED | AWS Provider v6 Guide |
+| Component                    | Status      | Official Source                |
+| ---------------------------- | ----------- | ------------------------------ |
+| Python 3.12 Runtime          | ✅ VERIFIED | AWS Lambda Docs, AWS Blogs     |
+| aws_s3_object Resource       | ✅ VERIFIED | Terraform Registry             |
+| S3 ACL/Versioning Separation | ✅ VERIFIED | AWS Provider v6 Guide          |
 | API Gateway Deployment/Stage | ✅ VERIFIED | AWS re:Post, Terraform Samples |
-| Slack Token Storage | ✅ VERIFIED | Slack Security Best Practices |
-| Python Exception Handling | ✅ VERIFIED | Python/botocore Docs |
-| Version Requirements | ✅ VERIFIED | Provider Lock File |
+| Slack Token Storage          | ✅ VERIFIED | Slack Security Best Practices  |
+| Python Exception Handling    | ✅ VERIFIED | Python/botocore Docs           |
+| Version Requirements         | ✅ VERIFIED | Provider Lock File             |
 
 ## Recommendations for Future Enhancements
 

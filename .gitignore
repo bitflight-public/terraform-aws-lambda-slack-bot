@@ -11,3 +11,4 @@ terraform.tfvars
 __pycache__
 *.pyc
 test_lambda_functions.py
+node_modules/

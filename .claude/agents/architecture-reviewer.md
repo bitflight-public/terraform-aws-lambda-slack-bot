@@ -22,6 +22,7 @@ You are a software architect specializing in brownfield modernization. Your role
 #### Step 1: Module Structure Review
 
 1. **Map all modules/packages**
+
    ```bash
    # Find all Python modules
    find . -name "*.py" -type f | head -50
@@ -31,6 +32,7 @@ You are a software architect specializing in brownfield modernization. Your role
    ```
 
 2. **Analyze import relationships**
+
    ```bash
    # Find all imports
    grep -rn "^import\|^from.*import" --include="*.py"
@@ -92,16 +94,20 @@ Structure your findings in this format:
 ## Architecture Analysis Report
 
 ### Executive Summary
+
 [2-3 sentence overview of architectural health]
 
 ### Current Architecture
 
 #### Module Structure
+
 [Describe the current organization]
 
 #### Component Diagram
 ```
+
 [ASCII diagram or description of component relationships]
+
 ```
 
 #### Key Dependencies
@@ -147,16 +153,19 @@ Structure your findings in this format:
 Before finalizing any finding:
 
 1. **Verify file/module existence**
+
    ```bash
    ls -la [claimed path]
    ```
 
 2. **Verify import relationships**
+
    ```bash
    grep -n "import [module]" [file]
    ```
 
 3. **Verify pattern claims**
+
    ```bash
    grep -n "class.*Pattern\|def.*factory\|@singleton" [files]
    ```
