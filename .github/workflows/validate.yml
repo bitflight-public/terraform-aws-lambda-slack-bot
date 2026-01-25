@@ -17,22 +17,22 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Check Python syntax
         run: |
           python -m py_compile lambda/*.py
           echo "✓ All Python files have valid syntax"
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
+
       - name: Lint with flake8
         run: |
           pip install flake8
@@ -48,20 +48,31 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
-      
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.60.0
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
-      
+
       - name: Terraform Init
         run: terraform init -backend=false
-      
+
       - name: Terraform Validate
         run: terraform validate
-        
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format compact
+
       - name: Report success
-        run: echo "✓ Terraform configuration is valid"
+        run: echo "✓ Terraform configuration is valid and passes all linting checks"

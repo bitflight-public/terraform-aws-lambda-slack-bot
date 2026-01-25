@@ -203,8 +203,46 @@ aws lambda invoke \
 | Name | Version |
 |------|---------|
 | terraform | >= 1.6 |
-| aws provider | >= 6.0 |
+| aws provider | >= 5.0 |
+| archive provider | >= 2.0 |
 | python | 3.12 |
+
+## Development
+
+This project includes automated linting and formatting tools:
+
+### Pre-commit Hooks
+
+Install pre-commit hooks for automatic validation:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+### Linting Commands
+
+```bash
+# Terraform formatting
+terraform fmt -check -recursive    # Check formatting
+terraform fmt -recursive           # Apply formatting
+
+# TFLint (Terraform linting with AWS plugin)
+tflint --init                      # Initialize plugins
+tflint                             # Run linter
+
+# Python linting
+flake8 lambda/ --max-complexity=10 --max-line-length=127
+
+# Run all pre-commit hooks
+pre-commit run --all-files
+```
+
+### Configuration Files
+
+- `.tflint.hcl` - TFLint configuration with AWS ruleset
+- `.pre-commit-config.yaml` - Pre-commit hook configuration
+- `versions.tf` - Terraform and provider version constraints
 
 ## Recent Updates (January 2026)
 
@@ -216,6 +254,9 @@ This module has been modernized and validated:
 - ✅ **AWS Provider Updated**: Compatible with AWS provider v5.0+
 - ✅ **CI/CD Added**: GitHub Actions workflow validates both Python and Terraform code
 - ✅ **Dependencies Documented**: Added requirements.txt for Python dependencies
+- ✅ **HCL Linting Added**: TFLint with AWS plugin for Terraform best practices
+- ✅ **Pre-commit Hooks**: Automated formatting and linting on commit
+- ✅ **Variable Types**: All variables now have explicit types and descriptions
 
 ## License
 

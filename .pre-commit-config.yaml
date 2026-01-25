@@ -1,0 +1,62 @@
+# Pre-commit hooks for terraform-aws-lambda-slack-bot
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Terraform formatting and validation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.3
+    hooks:
+      - id: terraform_fmt
+        name: Terraform Format
+        description: Rewrites all Terraform configuration files to canonical format
+
+      - id: terraform_validate
+        name: Terraform Validate
+        description: Validates all Terraform configuration files
+
+      - id: terraform_tflint
+        name: TFLint
+        description: Lints Terraform files with tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+      - id: terraform_docs
+        name: Terraform Docs
+        description: Generates documentation from Terraform modules
+        args:
+          - --args=--config=.terraform-docs.yml
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+
+  # Python linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        name: Flake8 Python Linting
+        files: ^lambda/
+        args:
+          - --max-line-length=127
+          - --max-complexity=10
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+      - id: end-of-file-fixer
+        name: Fix End of Files
+      - id: check-yaml
+        name: Check YAML Syntax
+      - id: check-json
+        name: Check JSON Syntax
+      - id: check-added-large-files
+        name: Check for Large Files
+        args: ['--maxkb=500']
+      - id: detect-private-key
+        name: Detect Private Keys
+      - id: check-merge-conflict
+        name: Check for Merge Conflicts
