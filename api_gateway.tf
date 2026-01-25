@@ -47,7 +47,10 @@ resource "aws_api_gateway_integration_response" "response" {
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on = [aws_api_gateway_integration.lambda]
+  depends_on = [
+    aws_api_gateway_integration.lambda,
+    aws_api_gateway_integration_response.response
+  ]
 
   rest_api_id = aws_api_gateway_rest_api.bot.id
 
@@ -56,6 +59,7 @@ resource "aws_api_gateway_deployment" "deployment" {
       aws_api_gateway_resource.event_handler.id,
       aws_api_gateway_method.method.id,
       aws_api_gateway_integration.lambda.id,
+      aws_api_gateway_integration_response.response.id,
     ]))
   }
 

@@ -6,7 +6,7 @@ import json
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from botocore.exceptions import ClientError, BotoCoreError
-from bot_functions import get_param_map, put_param_map
+from bot_functions import get_param_map
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())

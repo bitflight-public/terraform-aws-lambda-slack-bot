@@ -33,8 +33,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       
-      - name: Lint with flake8 (if available)
-        continue-on-error: true
+      - name: Lint with flake8
         run: |
           pip install flake8
           # Stop the build if there are Python syntax errors or undefined names
@@ -57,7 +56,6 @@ jobs:
       
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
-        continue-on-error: true
       
       - name: Terraform Init
         run: terraform init -backend=false

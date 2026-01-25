@@ -203,7 +203,7 @@ aws lambda invoke \
 | Name | Version |
 |------|---------|
 | terraform | >= 1.6 |
-| aws provider | >= 5.0 |
+| aws provider | >= 6.0 |
 | python | 3.12 |
 
 ## Recent Updates (January 2026)

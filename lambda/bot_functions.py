@@ -12,7 +12,8 @@ def get_param_map(param_root):
     name_list = []
     for p in response['Parameters']:
         if p['Name']:
-            name_list.append(param_root + "/"+ p['Name'])
+            # p['Name'] already contains the full parameter name returned by SSM
+            name_list.append(p['Name'])
 
     if not name_list:
         print('No parameters at - ' + param_root)
@@ -31,7 +32,7 @@ def put_param_map(param_root, kp_map):
     try:
         for name, value in kp_map.items():
             full_name = param_root + name
-            response = client.put_parameter(
+            client.put_parameter(
                 Name=full_name,
                 Value=value,
                 Type='String',
