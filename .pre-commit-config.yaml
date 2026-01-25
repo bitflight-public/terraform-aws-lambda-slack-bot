@@ -80,15 +80,6 @@ repos:
     hooks:
       - id: markdownlint-cli2
 
-  # YAML/JSON formatting with Prettier
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        name: Format YAML, JSON, and Markdown files
-        types_or: [yaml, json, markdown]
-        exclude: (\.lock$|\.terraform/)
-
   # Shell formatting
   - repo: https://github.com/pecigonzalo/pre-commit-shfmt
     rev: v2.2.0
@@ -128,6 +119,15 @@ repos:
           - --hook-config=--path-to-file=README.md
           - --hook-config=--add-to-existing-file=true
           - --hook-config=--create-file-if-not-exist=true
+
+  # YAML/JSON formatting with Prettier (after terraform_docs to format generated docs)
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        name: Format YAML, JSON, and Markdown files
+        types_or: [yaml, json, markdown]
+        exclude: (\.lock$|\.terraform/)
 
 # Configuration for specific hooks
 default_language_version:
