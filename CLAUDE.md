@@ -9,20 +9,29 @@ Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, S3, 
 ## Build & Validation Commands
 
 ```bash
+# Install dependencies with uv
+uv sync
+
 # Python syntax check
 python -m py_compile lambda/*.py
 
 # Python linting with Ruff
-ruff check lambda/
+uv run ruff check lambda/
 
 # Python linting with auto-fix
-ruff check lambda/ --fix
+uv run ruff check lambda/ --fix
 
 # Python formatting check
-ruff format --check lambda/
+uv run ruff format --check lambda/
 
 # Python formatting (apply fixes)
-ruff format lambda/
+uv run ruff format lambda/
+
+# Type checking with mypy
+uv run mypy lambda/
+
+# Type checking with basedpyright
+uv run basedpyright lambda/
 
 # Terraform format check
 terraform fmt -check -recursive
@@ -57,11 +66,15 @@ This repository uses automated linting for both Python and Terraform/HCL files:
 - `tflint` - Terraform linter with AWS plugin (configured in `.tflint.hcl`)
 - `terraform validate` - Configuration syntax validation
 
-**Python:**
-- `ruff` - Fast Python linter and formatter (configured in `ruff.toml`)
+**Python (managed by uv):**
+- `ruff` - Fast Python linter and formatter
+- `mypy` - Static type checker (strict mode)
+- `basedpyright` - Additional type checking
+
+All Python tool configuration is in `pyproject.toml`.
 
 **Pre-commit Hooks (prek):**
-Install with `pip install prek && prek install`. Hooks run automatically on commit.
+Install with `uv tool install prek && prek install`. Hooks run automatically on commit.
 
 ## Architecture
 

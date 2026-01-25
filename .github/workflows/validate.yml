@@ -2,9 +2,9 @@ name: Validate
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -18,28 +18,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: '3.12'
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen
 
       - name: Check Python syntax
         run: |
           python -m py_compile lambda/*.py
           echo "✓ All Python files have valid syntax"
 
-      - name: Install Ruff
-        run: pip install ruff
-
       - name: Lint with Ruff
         run: |
-          ruff check lambda/ --output-format=github
+          uv run ruff check lambda/ --output-format=github
           echo "✓ Ruff linting passed"
 
       - name: Check formatting with Ruff
         run: |
-          ruff format --check lambda/
+          uv run ruff format --check lambda/
           echo "✓ Ruff formatting check passed"
+
+      - name: Type check with mypy
+        run: |
+          uv run mypy lambda/
+          echo "✓ Mypy type checking passed"
+
+      - name: Type check with basedpyright
+        run: |
+          uv run basedpyright lambda/
+          echo "✓ Basedpyright type checking passed"
 
   validate-terraform:
     name: Validate Terraform
@@ -85,10 +98,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: '3.12'
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -104,7 +120,7 @@ jobs:
         run: tflint --init
 
       - name: Install prek
-        run: pip install prek
+        run: uv tool install prek
 
       - name: Run prek hooks
         run: prek run --all-files
