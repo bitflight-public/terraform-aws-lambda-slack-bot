@@ -1,0 +1,50 @@
+# Ruff configuration for terraform-aws-lambda-slack-bot
+# https://docs.astral.sh/ruff/configuration/
+
+# Target Python 3.12
+target-version = "py312"
+
+# Line length matching previous flake8 config
+line-length = 127
+
+# Exclude common directories
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    ".terraform",
+]
+
+[lint]
+# Enable pyflakes (F), pycodestyle errors (E), and complexity (C90)
+select = [
+    "E",      # pycodestyle errors
+    "F",      # pyflakes
+    "C90",    # mccabe complexity
+    "W",      # pycodestyle warnings
+    "I",      # isort
+]
+
+# Ignore specific rules if needed
+ignore = []
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+[lint.mccabe]
+# Complexity threshold matching previous flake8 config
+max-complexity = 10
+
+[format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces
+indent-style = "space"
+
+# Respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Unix-style line endings
+line-ending = "auto"

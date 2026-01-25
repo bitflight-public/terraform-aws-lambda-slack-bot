@@ -12,11 +12,17 @@ Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, S3, 
 # Python syntax check
 python -m py_compile lambda/*.py
 
-# Python linting (errors only)
-flake8 lambda/ --select=E9,F63,F7,F82 --show-source
+# Python linting with Ruff
+ruff check lambda/
 
-# Python linting (full with warnings)
-flake8 lambda/ --max-complexity=10 --max-line-length=127
+# Python linting with auto-fix
+ruff check lambda/ --fix
+
+# Python formatting check
+ruff format --check lambda/
+
+# Python formatting (apply fixes)
+ruff format lambda/
 
 # Terraform format check
 terraform fmt -check -recursive
@@ -32,8 +38,8 @@ terraform validate
 tflint --init
 tflint
 
-# Run all pre-commit hooks
-pre-commit run --all-files
+# Run all prek hooks
+prek run --all-files
 
 # Deploy module
 terraform apply -var="slack_token=xoxb-..."
@@ -52,10 +58,10 @@ This repository uses automated linting for both Python and Terraform/HCL files:
 - `terraform validate` - Configuration syntax validation
 
 **Python:**
-- `flake8` - Python linting with complexity checks
+- `ruff` - Fast Python linter and formatter (configured in `ruff.toml`)
 
-**Pre-commit Hooks:**
-Install with `pip install pre-commit && pre-commit install`. Hooks run automatically on commit.
+**Pre-commit Hooks (prek):**
+Install with `pip install prek && prek install`. Hooks run automatically on commit.
 
 ## Architecture
 

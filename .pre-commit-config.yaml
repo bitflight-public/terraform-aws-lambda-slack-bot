@@ -1,6 +1,6 @@
 # Pre-commit hooks for terraform-aws-lambda-slack-bot
-# Install: pip install pre-commit && pre-commit install
-# Run manually: pre-commit run --all-files
+# Install: pip install prek && prek install
+# Run manually: prek run --all-files
 
 repos:
   # Terraform formatting and validation
@@ -30,16 +30,17 @@ repos:
           - --hook-config=--add-to-existing-file=true
           - --hook-config=--create-file-if-not-exist=true
 
-  # Python linting
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1
+  # Python linting and formatting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
     hooks:
-      - id: flake8
-        name: Flake8 Python Linting
+      - id: ruff-check
+        name: Ruff Linting
+        args: [--fix]
         files: ^lambda/
-        args:
-          - --max-line-length=127
-          - --max-complexity=10
+      - id: ruff-format
+        name: Ruff Formatting
+        files: ^lambda/
 
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks

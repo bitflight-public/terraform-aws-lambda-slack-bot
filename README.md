@@ -211,13 +211,13 @@ aws lambda invoke \
 
 This project includes automated linting and formatting tools:
 
-### Pre-commit Hooks
+### Pre-commit Hooks (prek)
 
-Install pre-commit hooks for automatic validation:
+Install [prek](https://prek.j178.dev/) hooks for automatic validation:
 
 ```bash
-pip install pre-commit
-pre-commit install
+pip install prek
+prek install
 ```
 
 ### Linting Commands
@@ -231,17 +231,23 @@ terraform fmt -recursive           # Apply formatting
 tflint --init                      # Initialize plugins
 tflint                             # Run linter
 
-# Python linting
-flake8 lambda/ --max-complexity=10 --max-line-length=127
+# Python linting with Ruff
+ruff check lambda/                 # Check for issues
+ruff check lambda/ --fix           # Auto-fix issues
 
-# Run all pre-commit hooks
-pre-commit run --all-files
+# Python formatting with Ruff
+ruff format --check lambda/        # Check formatting
+ruff format lambda/                # Apply formatting
+
+# Run all prek hooks
+prek run --all-files
 ```
 
 ### Configuration Files
 
 - `.tflint.hcl` - TFLint configuration with AWS ruleset
-- `.pre-commit-config.yaml` - Pre-commit hook configuration
+- `.pre-commit-config.yaml` - Prek hook configuration
+- `ruff.toml` - Ruff linter/formatter configuration
 - `versions.tf` - Terraform and provider version constraints
 
 ## Recent Updates (January 2026)
@@ -255,8 +261,9 @@ This module has been modernized and validated:
 - ✅ **CI/CD Added**: GitHub Actions workflow validates both Python and Terraform code
 - ✅ **Dependencies Documented**: Added requirements.txt for Python dependencies
 - ✅ **HCL Linting Added**: TFLint with AWS plugin for Terraform best practices
-- ✅ **Pre-commit Hooks**: Automated formatting and linting on commit
+- ✅ **Pre-commit Hooks**: Automated formatting and linting with prek
 - ✅ **Variable Types**: All variables now have explicit types and descriptions
+- ✅ **Ruff Integration**: Fast Python linting and formatting with Ruff
 
 ## License
 
