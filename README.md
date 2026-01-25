@@ -1,12 +1,20 @@
 # terraform-aws-lambda-slack-bot
 
+[![Validate](https://github.com/bitflight-public/terraform-aws-lambda-slack-bot/actions/workflows/validate.yml/badge.svg)](https://github.com/bitflight-public/terraform-aws-lambda-slack-bot/actions/workflows/validate.yml)
+
 A Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, and S3. The bot receives events from Slack's Event API and responds by reversing the text sent to it.
+
+> **Status**: ✅ **FUNCTIONAL AND MODERNIZED** (January 2026)
+> - Updated to Python 3.12 runtime (previously deprecated 3.6)
+> - Updated to Terraform 1.6+ compatible syntax
+> - All syntax errors fixed and validated
+> - Automated CI/CD validation in place
 
 ## Overview
 
 This module creates the necessary AWS infrastructure to run a Slack bot that:
 - Receives events from Slack via an API Gateway endpoint
-- Processes events using an AWS Lambda function (Python 3.6 runtime - deprecated, see Requirements section)
+- Processes events using an AWS Lambda function (Python 3.12 runtime)
 - Stores Slack tokens securely in AWS Systems Manager Parameter Store
 - Reverses text messages sent to the bot and posts them back to the Slack channel
 
@@ -24,7 +32,7 @@ The module provisions:
 Before using this module, you need:
 
 1. **AWS Account** with appropriate credentials configured
-2. **Terraform** installed (version 0.12 or higher recommended)
+2. **Terraform** installed (version 1.6 or higher recommended)
 3. **Slack Workspace** with admin access to create a Slack app
 4. **Slack Bot Token** from your Slack app
 
@@ -194,10 +202,20 @@ aws lambda invoke \
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12 |
-| aws provider | >= 2.0 |
+| terraform | >= 1.6 |
+| aws provider | >= 6.0 |
+| python | 3.12 |
 
-**Note:** This module currently uses Python 3.6 for the Lambda runtime, which reached end-of-life in December 2021. Consider updating to a newer Python runtime (3.9 or later) for security and support.
+## Recent Updates (January 2026)
+
+This module has been modernized and validated:
+
+- ✅ **Python Runtime Updated**: Upgraded from deprecated Python 3.6 to Python 3.12
+- ✅ **Terraform Modernized**: Updated to Terraform 1.6+ syntax, removing deprecated interpolation
+- ✅ **Syntax Errors Fixed**: Corrected all Python indentation and import errors
+- ✅ **AWS Provider Updated**: Compatible with AWS provider v5.0+
+- ✅ **CI/CD Added**: GitHub Actions workflow validates both Python and Terraform code
+- ✅ **Dependencies Documented**: Added requirements.txt for Python dependencies
 
 ## License
 
