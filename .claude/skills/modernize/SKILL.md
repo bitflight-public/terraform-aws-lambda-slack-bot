@@ -17,6 +17,7 @@ Orchestrate concurrent agents through a comprehensive brownfield modernization c
 ## Overview
 
 This skill implements a Chain-of-Verification (CoVe) approach to brownfield modernization where:
+
 1. AI generates initial analysis
 2. Verification questions are generated
 3. Questions are answered against ground truth (tests, linting, type checks)
@@ -43,14 +44,17 @@ bash .claude/skills/modernize/scripts/init-checkpoint.sh
 Deploy specialist agents in parallel where dependencies allow:
 
 **Wave 1 (Independent Analysis)**:
+
 - `architecture-reviewer`: Analyze code structure and design patterns
 - `security-auditor`: Review security vulnerabilities and IAM
 - `dependency-manager`: Evaluate and audit dependencies
 
 **Wave 2 (Requires Wave 1 findings)**:
+
 - `testing-specialist`: Assess test coverage and quality
 
 **Wave 3 (Synthesis)**:
+
 - Aggregate all findings
 - Cross-validate recommendations
 - Resolve conflicting guidance
@@ -119,6 +123,7 @@ Task(subagent_type="Explore", description="Dependency analysis", run_in_backgrou
 ### Step 3: Collect and Validate Results
 
 For each agent result:
+
 1. Parse findings
 2. Run validation harness against recommendations
 3. Self-correct any hallucinations detected
@@ -127,6 +132,7 @@ For each agent result:
 ### Step 4: Generate Summary Report
 
 After all agents complete:
+
 1. Aggregate findings by priority
 2. Identify cross-cutting concerns
 3. Generate actionable roadmap
@@ -138,13 +144,13 @@ Apply these checks to all AI-generated content:
 
 ### Verification Gates
 
-| Claim Type | Verification Method | Action on Failure |
-|------------|---------------------|-------------------|
-| File exists | `ls -la <path>` | Remove claim |
-| Function signature | `grep -n "def <name>" <file>` | Correct signature |
-| Dependency version | `grep <pkg> requirements.txt` | Update version |
-| Test coverage | `pytest --cov` | Correct percentage |
-| Config value | `grep <key> <config_file>` | Fix value |
+| Claim Type         | Verification Method           | Action on Failure  |
+| ------------------ | ----------------------------- | ------------------ |
+| File exists        | `ls -la <path>`               | Remove claim       |
+| Function signature | `grep -n "def <name>" <file>` | Correct signature  |
+| Dependency version | `grep <pkg> requirements.txt` | Update version     |
+| Test coverage      | `pytest --cov`                | Correct percentage |
+| Config value       | `grep <key> <config_file>`    | Fix value          |
 
 ### Self-Correction Loop
 

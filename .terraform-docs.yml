@@ -1,0 +1,55 @@
+formatter: markdown table
+
+version: ">= 0.17"
+
+# header-from and footer-from are optional
+# header-from: main.tf
+# footer-from: main.tf
+
+recursive:
+  enabled: false
+
+sections:
+  hide-all: false
+  show:
+    - inputs
+    - outputs
+    - providers
+    - requirements
+
+content: |-
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+output:
+  file: README.md
+  mode: inject
+  template: |-
+    <!-- prettier-ignore-start -->
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
+    <!-- prettier-ignore-end -->
+
+output-values:
+  enabled: false
+
+sort:
+  enabled: true
+  by: name
+
+settings:
+  anchor: false
+  color: true
+  default: true
+  description: true
+  escape: true
+  hide-empty: false
+  html: false
+  indent: 2
+  lockfile: true
+  read-comments: true
+  required: true
+  sensitive: true
+  type: true

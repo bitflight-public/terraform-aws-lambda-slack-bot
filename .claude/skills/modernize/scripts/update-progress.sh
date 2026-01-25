@@ -35,8 +35,7 @@ NOTES="${3:-}"
 
 # Validate status
 case "$STATUS" in
-    pending|in_progress|completed|blocked)
-        ;;
+    pending | in_progress | completed | blocked) ;;
     *)
         echo "❌ Invalid status: $STATUS"
         echo "   Valid values: pending, in_progress, completed, blocked"

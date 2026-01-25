@@ -1,19 +1,18 @@
 {
-    "token": "redacted",
-    "team_id": "T0LT9R6JJ", 
-    "api_app_id": "AAYFVE9K2", 
-    "event": {
-        "type": "message", 
-        "user": "U2EG3655W", 
-        "text": "hello", 
-        "ts": "1527777012.000932", 
-        "channel": "DB0B7TYDV", 
-        "event_ts": "1527777012.000932", 
-        "channel_type": "im"
-    }, 
-    "type": "event_callback", 
-    "event_id": "EvB08Q2F62", 
-    "event_time": 1527777012, 
-    "authed_users": ["UAZ53R8MR"]
-    
+  "token": "redacted",
+  "team_id": "T0LT9R6JJ",
+  "api_app_id": "AAYFVE9K2",
+  "event": {
+    "type": "message",
+    "user": "U2EG3655W",
+    "text": "hello",
+    "ts": "1527777012.000932",
+    "channel": "DB0B7TYDV",
+    "event_ts": "1527777012.000932",
+    "channel_type": "im"
+  },
+  "type": "event_callback",
+  "event_id": "EvB08Q2F62",
+  "event_time": 1527777012,
+  "authed_users": ["UAZ53R8MR"]
 }

@@ -5,6 +5,7 @@
 A Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, and S3. The bot receives events from Slack's Event API and responds by reversing the text sent to it.
 
 > **Status**: ✅ **FUNCTIONAL AND MODERNIZED** (January 2026)
+>
 > - Updated to Python 3.12 runtime (previously deprecated 3.6)
 > - Updated to Terraform 1.6+ compatible syntax
 > - All syntax errors fixed and validated
@@ -13,6 +14,7 @@ A Terraform module that deploys a Slack bot on AWS using Lambda, API Gateway, an
 ## Overview
 
 This module creates the necessary AWS infrastructure to run a Slack bot that:
+
 - Receives events from Slack via an API Gateway endpoint
 - Processes events using an AWS Lambda function (Python 3.12 runtime)
 - Stores Slack tokens securely in AWS Systems Manager Parameter Store
@@ -21,6 +23,7 @@ This module creates the necessary AWS infrastructure to run a Slack bot that:
 ## Architecture
 
 The module provisions:
+
 - **AWS Lambda Function**: Handles incoming Slack events and processes messages
 - **API Gateway**: Provides an HTTP endpoint for Slack to send events
 - **S3 Bucket**: Stores the Lambda deployment package
@@ -122,21 +125,25 @@ After deploying the module:
 5. The Lambda function will automatically verify and save the token
 6. Click "Save Changes"
 
+<!-- prettier-ignore-start -->
+<!-- BEGIN_TF_DOCS -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-| `slack_token` | Slack Bot User OAuth Token (xoxb-...) | `string` | `""` | yes |
-| `bot_name` | Name of the bot (used for resource naming) | `string` | `"arnold"` | no |
-| `app_version` | Version of the bot application | `string` | `"0.4.4"` | no |
-| `bucket_name` | S3 bucket name for Lambda code (creates new bucket if empty) | `string` | `""` | no |
-| `region` | AWS region to deploy resources | `string` | `"eu-west-2"` | no |
+|------|-------------|------|---------|:--------:|
+| app\_version | Version of the Slack bot application | `string` | `"0.4.4"` | no |
+| bot\_name | Name of the Slack bot, used for resource naming | `string` | `"arnold"` | no |
+| bucket\_name | Existing S3 bucket name for Lambda deployment package. If empty, a new bucket will be created | `string` | `""` | no |
+| region | AWS region for deploying resources | `string` | `"eu-west-2"` | no |
+| slack\_token | Slack Bot OAuth token (xoxb-...) for API authentication | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| `invoke_url` | API Gateway endpoint URL for Slack Event Subscriptions |
+| invoke\_url | API Gateway endpoint URL for Slack Event Subscriptions configuration |
+<!-- END_TF_DOCS -->
+<!-- prettier-ignore-end -->
 
 ## How It Works
 
@@ -159,6 +166,7 @@ After deploying the module:
 ## Customization
 
 To customize the bot's behavior, modify the Lambda function code in `lambda/index.py`. The current implementation reverses text messages, but you can extend it to:
+
 - Integrate with other AWS services
 - Respond to different event types
 - Implement custom slash commands
@@ -200,11 +208,11 @@ aws lambda invoke \
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 1.6 |
-| aws provider | >= 6.0 |
-| python | 3.12 |
+| Name         | Version |
+| ------------ | ------- |
+| terraform    | >= 1.6  |
+| aws provider | >= 5.0  |
+| python       | 3.12    |
 
 ## Recent Updates (January 2026)
 

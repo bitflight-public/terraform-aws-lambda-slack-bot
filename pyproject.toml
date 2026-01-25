@@ -1,0 +1,219 @@
+[project]
+name = "terraform-aws-lambda-slack-bot"
+description = "AWS Lambda Slack bot functions for the terraform-aws-lambda-slack-bot module"
+readme = "README.md"
+version = "0.4.4"
+authors = [{ name = "Bitflight Team", email = "support@bitflight.io" }]
+license = { text = "MIT" }
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: POSIX :: Linux",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.12",
+	"Topic :: Communications :: Chat",
+	"Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+keywords = ["slack", "bot", "aws", "lambda", "terraform"]
+requires-python = ">=3.12,<3.15"
+dependencies = [
+	"boto3>=1.26.0",
+	"urllib3>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+	"pytest>=8.0.0",
+	"pytest-cov>=6.0.0",
+	"pytest-mock>=3.14.0",
+	"pytest-asyncio>=0.24.0",
+	"ruff>=0.9.4",
+	"mypy>=1.18.0",
+	"basedpyright>=1.33.0",
+	"prek>=0.2.19",
+	"moto[ssm]>=5.0.0",
+	"boto3-stubs[ssm]>=1.26.0",
+]
+
+[tool.uv]
+managed = true
+compile-bytecode = true
+
+[tool.ruff]
+target-version = "py312"
+fix = true
+unsafe-fixes = true
+src = ["lambda", "tests"]
+
+[tool.ruff.format]
+docstring-code-format = true
+quote-style = "double"
+line-ending = "lf"
+skip-magic-trailing-comma = true
+preview = true
+
+[tool.ruff.lint]
+preview = true
+extend-select = [
+	"A",     # flake8-builtins
+	"ANN",   # flake8-annotations
+	"ASYNC", # flake8-async
+	"B",     # flake8-bugbear
+	"BLE",   # flake8-blind-except
+	"C4",    # flake8-comprehensions
+	"C90",   # mccabe complexity
+	"D",     # pydocstyle
+	"DOC",   # pydoclint
+	"E",     # pycodestyle errors
+	"EXE",   # flake8-executable
+	"F",     # pyflakes
+	"FA",    # flake8-future-annotations
+	"FLY",   # flynt
+	"FURB",  # refurb
+	"G201",  # logging-exc-info
+	"G202",  # logging-redundant-exc-info
+	"I",     # isort
+	"N",     # pep8-naming
+	"PERF",  # perflint
+	"PGH",   # pygrep-hooks
+	"PIE",   # flake8-pie
+	"PL",    # pylint
+	"PT",    # flake8-pytest-style
+	"PTH",   # flake8-use-pathlib
+	"PYI",   # flake8-pyi
+	"Q",     # flake8-quotes
+	"RET",   # flake8-return
+	"RSE",   # flake8-raise
+	"RUF",   # ruff-specific
+	"S",     # flake8-bandit (security)
+	"SIM",   # flake8-simplify
+	"SLF",   # flake8-self
+	"SLOT",  # flake8-slots
+	"T10",   # flake8-debugger
+	"T20",   # flake8-print
+	"TC",    # flake8-type-checking
+	"TRY",   # tryceratops
+	"UP",    # pyupgrade
+	"W",     # pycodestyle warnings
+	"YTT",   # flake8-2020
+]
+ignore = [
+	"ANN401",  # Any type - acceptable for AWS event handling
+	"DOC201",  # return not documented in docstring
+	"DOC501",  # Raised exception missing from docstring
+	"DOC502",  # Raised exception is not explicitly raised
+	"E501",    # Line too long - handled by formatter
+	"EXE003",  # Shebang check - not needed for Lambda
+	"S404",    # subprocess possibly insecure - not used
+	"S603",    # subprocess without shell=True
+	"S606",    # os.exec* without shell
+	"PLR6301", # Method could be function - acceptable for API design
+	"PLR0913", # Too many arguments - acceptable for Lambda handlers
+	"PLR0917", # Too many positional arguments
+	"TRY003",  # Long error messages are fine
+	"T201",    # print() statements - needed for Lambda logging
+	"N815",    # mixedCase variable - acceptable for AWS SDK
+	"D100",    # Missing docstring in public module - relaxed for Lambda
+	"D104",    # Missing docstring in public package
+]
+unfixable = ["F401"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = [
+	"S",      # Security checks relaxed for tests
+	"D",      # Docstring requirements relaxed
+	"E501",   # Line length relaxed for test data
+	"ANN",    # Type annotations optional for tests
+	"DOC",    # Docstring content requirements relaxed
+	"PLC",    # Local imports acceptable in test helpers
+	"SLF",    # Private name imports acceptable for testing
+	"PLR",    # Testing private methods is valid
+	"N",      # camelCase acceptable in tests
+	"T",      # print() allowed in tests
+	"BLE",    # Catching exceptions for test verification
+	"PT011",  # pytest.raises match patterns optional
+]
+"lambda/**" = [
+	"T201",   # print() is the logging mechanism in Lambda
+	"D103",   # Missing docstring in public function - relaxed for handlers
+]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = false
+force-single-line = false
+force-wrap-aliases = false
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+extra_checks = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+show_error_codes = true
+pretty = true
+disable_error_code = ["call-arg", "misc"]
+mypy_path = ["lambda"]
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+module = ["test.*", "tests.*"]
+disable_error_code = [
+	"attr-defined",
+	"call-arg",
+	"var-annotated",
+	"valid-type",
+	"no-any-return",
+	"index",
+]
+
+
+[tool.basedpyright]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnnecessaryTypeIgnoreComment = "error"
+reportPrivateImportUsage = true
+reportImplicitRelativeImport = false
+include = ["lambda"]
+extraPaths = ["lambda"]
+ignore = ["tests"]
+
+[tool.pytest.ini_options]
+addopts = [
+	"--cov=lambda",
+	"--cov-report=term-missing",
+	"-v",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = [".", "lambda"]
+markers = [
+	"slow: tests that take significant time to run",
+	"integration: integration tests",
+]
+
+[tool.coverage.run]
+omit = ["**/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 50

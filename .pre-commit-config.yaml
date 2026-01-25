@@ -1,0 +1,134 @@
+# prek - Pre-commit Re-engineered in Rust
+# install via: `uv tool install prek`
+# prek is a Rust-based drop-in replacement for pre-commit created by https://github.com/j178/prek
+# Sources:
+# - https://github.com/j178/prek
+# - https://prek.j178.dev/
+
+default_stages:
+  - commit-msg
+  - pre-commit
+
+repos:
+  - repo: https://github.com/mxr/sync-pre-commit-deps
+    rev: v0.0.3
+    hooks:
+      - id: sync-pre-commit-deps
+
+  # Conventional commit messages
+  - repo: local
+    hooks:
+      - id: conventional-pre-commit
+        name: Conventional Commit
+        stages: [commit-msg]
+        language: system
+        always_run: true
+        entry: uv run --with conventional-pre-commit conventional-pre-commit --strict --force-scope
+
+  # Standard pre-commit hooks for general file maintenance
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.lock$
+      - id: end-of-file-fixer
+        exclude: \.lock$
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ["--maxkb=10000"]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key
+
+  # Python formatting and linting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.14
+    hooks:
+      - id: ruff
+        name: Lint Python with ruff
+        args: [--fix]
+      - id: ruff-format
+        name: Format Python with ruff
+
+  # Basedpyright type checking
+  - repo: https://github.com/DetachHead/basedpyright-prek-mirror
+    rev: 1.37.2
+    hooks:
+      - id: basedpyright
+
+  # Mypy type checking
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run --with mypy mypy
+        language: system
+        types: [python]
+        pass_filenames: true
+
+  # Markdown linting
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.20.0
+    hooks:
+      - id: markdownlint-cli2
+
+  # Shell formatting
+  - repo: https://github.com/pecigonzalo/pre-commit-shfmt
+    rev: v2.2.0
+    hooks:
+      - id: shell-fmt-go
+        args:
+          - "--apply-ignore"
+          - -w
+          - -i
+          - "4"
+          - -ci
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+
+  # Terraform formatting and validation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      - id: terraform_fmt
+        name: Terraform Format
+
+      - id: terraform_validate
+        name: Terraform Validate
+
+      - id: terraform_tflint
+        name: TFLint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+      - id: terraform_docs
+        name: Terraform Docs
+        args:
+          - --args=--config=.terraform-docs.yml
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+
+  # YAML/JSON formatting with Prettier (after terraform_docs to format generated docs)
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        name: Format YAML, JSON, and Markdown files
+        types_or: [yaml, json, markdown]
+        exclude: (\.lock$|\.terraform/)
+
+# Configuration for specific hooks
+default_language_version:
+  python: python3.12

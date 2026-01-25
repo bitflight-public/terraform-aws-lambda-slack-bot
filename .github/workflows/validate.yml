@@ -2,9 +2,9 @@ name: Validate
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -16,30 +16,43 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: '3.12'
-      
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
       - name: Check Python syntax
         run: |
           python -m py_compile lambda/*.py
           echo "✓ All Python files have valid syntax"
-      
-      - name: Install dependencies
+
+      - name: Lint with Ruff
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      - name: Lint with flake8
+          uv run ruff check lambda/ --output-format=github
+          echo "✓ Ruff linting passed"
+
+      - name: Check formatting with Ruff
         run: |
-          pip install flake8
-          # Stop the build if there are Python syntax errors or undefined names
-          flake8 lambda/ --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Exit-zero treats all errors as warnings
-          flake8 lambda/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          uv run ruff format --check lambda/
+          echo "✓ Ruff formatting check passed"
+
+      - name: Type check with mypy
+        run: |
+          uv run mypy lambda/
+          echo "✓ Mypy type checking passed"
+
+      - name: Type check with basedpyright
+        run: |
+          uv run basedpyright lambda/
+          echo "✓ Basedpyright type checking passed"
 
   validate-terraform:
     name: Validate Terraform
@@ -47,21 +60,75 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      
+      - uses: actions/checkout@v6
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
-      
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v6
+        with:
+          tflint_version: v0.60.0
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
-      
+
       - name: Terraform Init
         run: terraform init -backend=false
-      
+
       - name: Terraform Validate
         run: terraform validate
-        
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format compact
+
       - name: Report success
-        run: echo "✓ Terraform configuration is valid"
+        run: echo "✓ Terraform configuration is valid and passes all linting checks"
+
+  pre-commit:
+    name: Pre-commit Hooks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v6
+        with:
+          tflint_version: v0.60.0
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Install terraform-docs
+        run: |
+          curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.19.0/terraform-docs-v0.19.0-linux-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz
+          chmod +x terraform-docs
+          sudo mv terraform-docs /usr/local/bin/
+          rm terraform-docs.tar.gz
+
+      - name: Install Python dependencies
+        run: uv sync --frozen
+
+      - name: Run prek hooks
+        run: uv run prek run --all-files
